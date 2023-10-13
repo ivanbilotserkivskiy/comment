@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CommentsList } from "./components/CommentsList"
 import { CommentsSort } from "./components/CommentsSort"
 import { getComments } from "../../api/comments";
-import { CommentType } from "../../types/CommentType";
 import { Pagination } from "./components/Pagination";
+import { useSharedState } from "../../store/store";
 
 export const Comments = () => {
 
-  const [comments, setComments] = useState<CommentType[] | string>()
+  const [state, setState] = useSharedState()
 
-  const fetchComments = async () => {
+  const fetchComments = async (query: string) => {
     console.log(await getComments())
-      const commentsFromServer = await getComments();
+      const commentsFromServer = await getComments(query);
       if (typeof commentsFromServer === 'string') {
         return console.log(commentsFromServer);
       }
 
       if (commentsFromServer) {
-        setComments(() => (commentsFromServer))
+        setState(prev => ({...prev, comments: commentsFromServer}))
       }
   }
 
   useEffect(() => {
-    fetchComments();
-  },[])
+    fetchComments(`?sortBy=${state.sortBy}&order=${state.order}`);
+  }, [state.order, state.sortBy])
 
   return (
     <>
@@ -32,8 +32,8 @@ export const Comments = () => {
           <CommentsSort />
           <div className="is-dekstop">
             {
-              (comments && typeof comments !== 'string') 
-                ? <CommentsList comments={comments} />  
+              (state.comments && typeof state.comments !== 'string') 
+                ? <CommentsList comments={state.comments} />  
                 : null
             }
           </div>

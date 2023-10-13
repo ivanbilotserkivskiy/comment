@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { createContainer } from 'react-tracked';
 import { SharedStateType } from '../types/SharedStateType'
 const initialState: SharedStateType = {
-  comments: { data: [] },
+  comments: [],
+  order: "ASC",
+  sortBy: 'created',
 };
 
 const useMyState = () => useState(initialState);
