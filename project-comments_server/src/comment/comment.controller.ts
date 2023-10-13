@@ -1,8 +1,20 @@
 import { In, IsNull } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { CommentService } from './comment.service';
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
-import { OutputErrOrData } from 'src/types/OutputErrOrData';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { customFileValidator } from 'src/utils/customFileValidator';
 
 @Controller('comments')
 export class CommentController {
@@ -53,20 +65,45 @@ export class CommentController {
   }
 
   @Post()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './files',
+        filename: (req, file, callback) => {
+          const unixid = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          const filename = `${unixid}${ext}`;
+
+          callback(null, filename);
+        },
+      }),
+      fileFilter: customFileValidator,
+    }),
+  )
   async add(
     @Body() comment: CommentEntity,
-  ): Promise<OutputErrOrData<CommentEntity>> {
-    const { parent_id, comment_text, file_path, username, email, tred_id } =
-      comment;
-    const errOrData = this.commentService.add({
-      parent_id,
-      tred_id,
+    @UploadedFile(new ParseFilePipe({ fileIsRequired: false }))
+    file?: Express.Multer.File,
+  ): Promise<CommentEntity | string> {
+    const { parent_id, comment_text, username, email, tred_id } = comment;
+
+    console.log(comment);
+
+    let dbfilename = null;
+
+    if (file) {
+      dbfilename = `/files/${file.filename}`;
+    }
+
+    const newComment = await this.commentService.add({
+      parent_id: +parent_id,
+      tred_id: +tred_id,
       comment_text,
-      file_path,
+      file_path: dbfilename,
       username,
       email,
     });
 
-    return errOrData;
+    return newComment;
   }
 }

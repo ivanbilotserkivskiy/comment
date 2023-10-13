@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from './comment.entity';
 import { Repository } from 'typeorm';
-import { OutputErrOrData } from 'src/types/OutputErrOrData';
 
 @Injectable()
 export class CommentService {
@@ -45,7 +44,7 @@ export class CommentService {
     });
   }
 
-  async add(comment): Promise<OutputErrOrData<CommentEntity>> {
+  async add(comment): Promise<CommentEntity | string> {
     try {
       const { parent_id, comment_text, file_path, username, email, tred_id } =
         comment;
@@ -57,9 +56,9 @@ export class CommentService {
         username,
         email,
       });
-      return { data };
+      return data;
     } catch (error) {
-      return { error };
+      return 'can not create comment';
     }
   }
 }
