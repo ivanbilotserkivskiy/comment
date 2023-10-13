@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from './comment.entity';
 import { Repository } from 'typeorm';
+import { OutputErrOrData } from 'src/types/OutputErrOrData';
 
 @Injectable()
 export class CommentService {
@@ -10,12 +11,18 @@ export class CommentService {
     private readonly commentRepository: Repository<CommentEntity>,
   ) {}
 
-  async findAll(): Promise<CommentEntity[]> {
-    return this.commentRepository.find({
-      order: {
-        created: 'DESC',
-      },
-    });
+  async findAll(filter): Promise<CommentEntity[] | string> {
+    try {
+      const data = await this.commentRepository.find({
+        order: {
+          created: 'DESC',
+        },
+        where: filter,
+      });
+      return data;
+    } catch {
+      return 'Can not get data';
+    }
   }
 
   async findByTredId(tred_id: string): Promise<CommentEntity[]> {
@@ -29,16 +36,21 @@ export class CommentService {
     });
   }
 
-  async add(comment): Promise<CommentEntity> {
-    const { tred_id, parent_id, comment_text, file_path, username, email } =
-      comment;
-    return this.commentRepository.save({
-      tred_id,
-      parent_id,
-      comment_text,
-      file_path,
-      username,
-      email,
-    });
+  async add(comment): Promise<OutputErrOrData<CommentEntity>> {
+    try {
+      const { parent_id, comment_text, file_path, username, email, tred_id } =
+        comment;
+      const data = await this.commentRepository.save({
+        parent_id,
+        tred_id,
+        comment_text,
+        file_path,
+        username,
+        email,
+      });
+      return { data };
+    } catch (error) {
+      return { error };
+    }
   }
 }
