@@ -1,7 +1,7 @@
 import { In, IsNull } from 'typeorm';
 import { CommentEntity } from './comment.entity';
 import { CommentService } from './comment.service';
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { OutputErrOrData } from 'src/types/OutputErrOrData';
 
 @Controller('comments')
@@ -9,10 +9,13 @@ export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
   @Get()
-  async findAll(): Promise<CommentEntity[] | string> {
-    const mainComments = await this.commentService.findAll({
-      parent_id: IsNull(),
-    });
+  async findAll(@Query() query): Promise<CommentEntity[] | string> {
+    const mainComments = await this.commentService.findAll(
+      {
+        parent_id: IsNull(),
+      },
+      query,
+    );
 
     if (typeof mainComments === 'string') {
       return mainComments;

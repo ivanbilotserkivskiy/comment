@@ -11,11 +11,20 @@ export class CommentService {
     private readonly commentRepository: Repository<CommentEntity>,
   ) {}
 
-  async findAll(filter): Promise<CommentEntity[] | string> {
+  async findAll(filter, query?): Promise<CommentEntity[] | string> {
+    let sortBy = 'created';
+    let order = 'DESC';
+
+    console.log(query);
+
+    if (query && query.sortBy && query.order) {
+      sortBy = query.sortBy;
+      order = query.order;
+    }
     try {
       const data = await this.commentRepository.find({
         order: {
-          created: 'DESC',
+          [sortBy]: order,
         },
         where: filter,
       });

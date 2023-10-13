@@ -1,13 +1,18 @@
-import { Pagination } from "../Pagination"
+import { CommentType } from "../../../../types/CommentType"
 import { Comment } from "./Comment"
 
-export const CommentsList = () => {
+type Props = {
+  comments: CommentType[];
+}
+
+export const CommentsList:React.FC<Props> = ({ comments }) => {
+
   return (
     <>
-      <Comment />
-      <div className="is-justify-content-center is-flex">
-        <Pagination />
-      </div>
+      {comments.map(comment => (
+        <Comment comment={comment} />
+      ))}
+
     </>
   )
 }
