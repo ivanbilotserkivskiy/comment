@@ -3,7 +3,7 @@ import { createContainer } from 'react-tracked';
 import { SharedStateType } from '../types/SharedStateType'
 const initialState: SharedStateType = {
   comments: [],
-  order: "ASC",
+  order: "DESC",
   sortBy: 'created',
 };
 
