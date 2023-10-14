@@ -6,6 +6,7 @@ import { CommentEntity } from './comment/comment.entity';
 import { CommentModule } from './comment/comment.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -38,5 +39,6 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     }),
     CommentModule,
   ],
+  providers: [AppGateway],
 })
 export class AppModule {}
