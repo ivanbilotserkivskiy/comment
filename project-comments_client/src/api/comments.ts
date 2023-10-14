@@ -7,3 +7,7 @@ export const getComments = (query:string = '') => {
 export const addComment = (formData: FormData) => {
   return client.postFormData<CommentType>('/comments', formData);
 };
+
+export const getTotal = () => {
+  return client.get<number>('/comments/total')
+}

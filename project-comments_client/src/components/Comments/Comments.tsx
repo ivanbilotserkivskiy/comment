@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { CommentsList } from "./components/CommentsList"
 import { CommentsSort } from "./components/CommentsSort"
-import { getComments } from "../../api/comments";
+import { getComments, getTotal } from "../../api/comments";
 import { Pagination } from "./components/Pagination";
 import { useSharedState } from "../../store/store";
 
@@ -21,9 +21,16 @@ export const Comments = () => {
       }
   }
 
+  const fetchTotal = async () => {
+    const totalComments = await getTotal();
+
+    setState(prev => ({ ...prev, total: totalComments }))
+  }
+
   useEffect(() => {
-    fetchComments(`?sortBy=${state.sortBy}&order=${state.order}`);
-  }, [state.order, state.sortBy])
+    fetchComments(`?sortBy=${state.sortBy}&order=${state.order}&page=${state.page}`);
+    fetchTotal()
+  }, [state.order, state.sortBy, state.page])
 
   return (
     <>

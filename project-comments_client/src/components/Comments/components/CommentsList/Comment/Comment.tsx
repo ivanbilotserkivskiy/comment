@@ -39,12 +39,12 @@ export const Comment: React.FC<Props> = ({ comment }) => {
         </p>
       </div>
       {(comment.file_path && isImage) &&(<figure className="media-left">
-      <p className={`image ${CommentStyles.image}`}>
+      <a target="_blank" href={`${baseURL}${comment.file_path}`} className={`image ${CommentStyles.image}`}>
         <img src={`${baseURL}${comment.file_path}`} />
-      </p>
+      </a>
       </figure>)}
       {(comment.file_path && isTextFile) && (
-        <a href={`${baseURL}${comment.file_path}`}>TextFile</a>
+        <a href={`${baseURL}${comment.file_path}`}  target="_blank">TextFile</a>
       )}
       <div className={CommentStyles.answer_container}>
         <a href="#form" className={CommentStyles.answer_link} onClick={() => setParentAndTred()}>

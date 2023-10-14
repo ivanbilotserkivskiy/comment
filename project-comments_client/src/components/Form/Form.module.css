@@ -2,6 +2,8 @@
   width: 300px;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+  margin-bottom: 20px;
 }
 .content label {
   padding-left: 10px;

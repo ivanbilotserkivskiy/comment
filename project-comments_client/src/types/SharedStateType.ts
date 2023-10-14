@@ -6,4 +6,6 @@ export type SharedStateType = {
   order: 'DESC' | "ASC";
   tred: string,
   parent: string,
+  page: number,
+  total: number,
 }

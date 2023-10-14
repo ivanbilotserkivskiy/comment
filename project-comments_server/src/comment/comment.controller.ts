@@ -16,6 +16,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { customFileValidator } from 'src/utils/customFileValidator';
 import { validation } from 'src/utils/validation';
+import { cleanHTML } from 'src/utils/sanitize';
 
 @Controller('comments')
 export class CommentController {
@@ -65,6 +66,11 @@ export class CommentController {
     return commentsData;
   }
 
+  @Get('/total')
+  async findTotal() {
+    return this.commentService.countTotal();
+  }
+
   @Post()
   @UseInterceptors(
     FileInterceptor('file', {
@@ -99,7 +105,7 @@ export class CommentController {
       return error;
     }
 
-    console.log(comment);
+    const cleanCommentText = cleanHTML(comment_text);
 
     let dbfilename = null;
 
@@ -116,7 +122,7 @@ export class CommentController {
     const newComment = await this.commentService.add({
       parent_id: parentId,
       tred_id: tredId,
-      comment_text,
+      comment_text: cleanCommentText,
       file_path: dbfilename,
       username,
       email,

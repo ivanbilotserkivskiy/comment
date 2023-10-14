@@ -7,6 +7,8 @@ const initialState: SharedStateType = {
   sortBy: 'created',
   tred: '',
   parent: '',
+  page: 1,
+  total: 0,
 };
 
 const useMyState = () => useState(initialState);

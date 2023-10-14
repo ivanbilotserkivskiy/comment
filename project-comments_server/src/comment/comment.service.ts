@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from './comment.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 @Injectable()
 export class CommentService {
@@ -13,23 +13,46 @@ export class CommentService {
   async findAll(filter, query?): Promise<CommentEntity[] | string> {
     let sortBy = 'created';
     let order = 'DESC';
+    const perPage = 25;
+    let page = 1;
 
-    console.log(query);
+    if (query && query.page) {
+      page = +query.page;
+    }
+
+    const offset = (page - 1) * perPage;
 
     if (query && query.sortBy && query.order) {
       sortBy = query.sortBy;
       order = query.order;
     }
-    try {
-      const data = await this.commentRepository.find({
-        order: {
-          [sortBy]: order,
-        },
-        where: filter,
-      });
-      return data;
-    } catch {
-      return 'Can not get data';
+
+    if (query && query.page) {
+      try {
+        const data = await this.commentRepository.find({
+          order: {
+            [sortBy]: order,
+          },
+          skip: offset,
+          take: perPage,
+          where: filter,
+        });
+        return data;
+      } catch {
+        return 'Can not get data';
+      }
+    } else {
+      try {
+        const data = await this.commentRepository.find({
+          order: {
+            [sortBy]: order,
+          },
+          where: filter,
+        });
+        return data;
+      } catch {
+        return 'Can not get data';
+      }
     }
   }
 
@@ -59,6 +82,20 @@ export class CommentService {
       return data;
     } catch (error) {
       return 'can not create comment';
+    }
+  }
+
+  async countTotal(): Promise<number | string> {
+    try {
+      const total = await this.commentRepository.count({
+        where: {
+          parent_id: IsNull(),
+        },
+      });
+
+      return total;
+    } catch {
+      return 'cant count main coments';
     }
   }
 
