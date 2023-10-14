@@ -15,6 +15,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { customFileValidator } from 'src/utils/customFileValidator';
+import { validation } from 'src/utils/validation';
 
 @Controller('comments')
 export class CommentController {
@@ -86,6 +87,17 @@ export class CommentController {
     file?: Express.Multer.File,
   ): Promise<CommentEntity | string> {
     const { parent_id, comment_text, username, email, tred_id } = comment;
+    const error = validation({
+      comment_text,
+      username,
+      email,
+      parent_id,
+      tred_id,
+    });
+
+    if (error) {
+      return error;
+    }
 
     console.log(comment);
 
@@ -95,9 +107,15 @@ export class CommentController {
       dbfilename = `/files/${file.filename}`;
     }
 
+    const parentId = parent_id ? +parent_id : null;
+    const tredId = tred_id
+      ? +tred_id
+      : await this.commentService.findMaxTredId();
+
+    console.log(tredId);
     const newComment = await this.commentService.add({
-      parent_id: +parent_id,
-      tred_id: +tred_id,
+      parent_id: parentId,
+      tred_id: tredId,
       comment_text,
       file_path: dbfilename,
       username,

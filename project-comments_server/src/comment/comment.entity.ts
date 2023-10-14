@@ -10,7 +10,7 @@ export class CommentEntity {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column({ type: 'int', nullable: true })
+  @Column({ type: 'int', nullable: true, default: null })
   parent_id: number | null;
 
   @Column({ type: 'int' })

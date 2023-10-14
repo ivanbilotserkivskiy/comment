@@ -61,4 +61,13 @@ export class CommentService {
       return 'can not create comment';
     }
   }
+
+  async findMaxTredId(): Promise<number | string> {
+    try {
+      let maxTredId = await this.commentRepository.maximum('tred_id');
+      return maxTredId ? ++maxTredId : 1;
+    } catch {
+      return 'can not find max tred Id';
+    }
+  }
 }
