@@ -5,6 +5,8 @@ const initialState: SharedStateType = {
   comments: [],
   order: "DESC",
   sortBy: 'created',
+  tred: '',
+  parent: '',
 };
 
 const useMyState = () => useState(initialState);

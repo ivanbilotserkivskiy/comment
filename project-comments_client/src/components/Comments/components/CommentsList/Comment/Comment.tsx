@@ -1,4 +1,5 @@
 import { CommentsList } from ".."
+import { useSharedState } from "../../../../../store/store";
 import { CommentType } from "../../../../../types/CommentType"
 import { baseURL } from "../../../../../utils/baseURL";
 import { getDateFromTime } from "../../../../../utils/getDateFromTime";
@@ -12,6 +13,7 @@ type Props ={
 const exts = ['.jpeg', '.jpg', '.png'];
 
 export const Comment: React.FC<Props> = ({ comment }) => {
+  const [, setState] = useSharedState();
   let isImage = false;
   let isTextFile = false;
   const published = getDateFromTime(comment.created);
@@ -19,6 +21,10 @@ export const Comment: React.FC<Props> = ({ comment }) => {
     const imageExt = comment.file_path.slice(comment.file_path.length - 5);
     isImage = exts.some(ext => imageExt.includes(ext));
     isTextFile = imageExt.includes('.txt');
+  }
+
+  const setParentAndTred = () => {
+    setState(prev => ({ ...prev, parent: `${comment.id}`, tred: `${comment.tred_id}` }))
   }
   return (
     <>
@@ -33,13 +39,18 @@ export const Comment: React.FC<Props> = ({ comment }) => {
         </p>
       </div>
       {(comment.file_path && isImage) &&(<figure className="media-left">
-      <p className="image is-64x64">
+      <p className={`image ${CommentStyles.image}`}>
         <img src={`${baseURL}${comment.file_path}`} />
       </p>
       </figure>)}
       {(comment.file_path && isTextFile) && (
         <a href={`${baseURL}${comment.file_path}`}>TextFile</a>
       )}
+      <div className={CommentStyles.answer_container}>
+        <a href="#form" className={CommentStyles.answer_link} onClick={() => setParentAndTred()}>
+          <i className="fa-solid fa-arrow-turn-down"></i>
+        </a>
+      </div>
     </div>
     {
       comment.children
