@@ -1,7 +1,6 @@
 import { CommentsList } from ".."
 import { useSharedState } from "../../../../../store/store";
 import { CommentType } from "../../../../../types/CommentType"
-import { baseURL } from "../../../../../utils/baseURL";
 import { getDateFromTime } from "../../../../../utils/getDateFromTime";
 import CommentStyles from './Comment.module.css';
 import cn from 'classnames';
@@ -39,12 +38,12 @@ export const Comment: React.FC<Props> = ({ comment }) => {
         </p>
       </div>
       {(comment.file_path && isImage) &&(<figure className="media-left">
-      <a target="_blank" href={`${baseURL}${comment.file_path}`} className={`image ${CommentStyles.image}`}>
-        <img src={`${baseURL}${comment.file_path}`} />
+      <a target="_blank" href={`${comment.file_path}`} className={`image ${CommentStyles.image}`}>
+        <img src={`${comment.file_path}`} />
       </a>
       </figure>)}
       {(comment.file_path && isTextFile) && (
-        <a href={`${baseURL}${comment.file_path}`}  target="_blank">TextFile</a>
+        <a href={`${comment.file_path}`}  target="_blank">TextFile</a>
       )}
       <div className={CommentStyles.answer_container}>
         <a href="#form" className={CommentStyles.answer_link} onClick={() => setParentAndTred()}>

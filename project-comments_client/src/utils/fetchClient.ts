@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:3001';
+import { baseURL } from "./baseURL";
+
+const BASE_URL = baseURL;
 
 type RequestMethod = 'GET' | 'POST';
 

@@ -16,7 +16,7 @@ function App() {
   }
 
   useEffect(() => {
-    const newSocket = io('https://commentserver.onrender.com:8001');
+    const newSocket = io('wss://commentserver.onrender.com');
     setSocket(newSocket)
   }, [setSocket]);
 
