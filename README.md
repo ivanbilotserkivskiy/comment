@@ -6,4 +6,4 @@ To run docker clone project and type in the terminal `cd project-comments_server
 
 In order to start frontend app use `cd project-comments/client` and run `npm run dev` command
 
-You can also access this project using this link `https://commentserver.onrender.com:10000`. This is `render` hosting for the backend part, while MySQL db also hosting seperate.
+You can also access this project using this link `https://commentserver.onrender.com`. This is `render` hosting for the backend part, while MySQL db also hosting seperate.
