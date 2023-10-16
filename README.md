@@ -1,6 +1,9 @@
 Comments project where you can add comments and reply to another comment. The project backend built with NestJs, MySQL, and TypeORM.
 The front end of the project built with React. 
 
+Site deployed at https://ivanbilotserkivskiy.github.io/comment_client/
+
+
 To start this project you should run docker containers for the DB and for the nest js app
 To run docker clone project and type in the terminal `cd project-comments_server`. Then compose the containers using `docker-compose up -d --build` command.
 
